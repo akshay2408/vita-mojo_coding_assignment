@@ -18,9 +18,17 @@ export class StoreService {
     });
   }
 
-  getList(relations: string[] = []): Promise<Store[]> {
+  getList(params: object, relations = []): Promise<Store[]> {
+    const limit = params["limit"]
+    const offset = params["offset"]
+     
+    limit ? delete params["limit"] : null
+    offset ? delete params["offset"] : null
+
     return this.storeRepository.find({
-      take: 100,
+      where: params,
+      skip: offset || 0,
+      take: limit || 10,
       relations,
     });
   }
